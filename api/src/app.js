@@ -34,7 +34,7 @@ app.use(cors());
 
 app.post("/register", async (req, res) => {
   let { body } = req;
-  let { username, password } = body;
+  let { firstName, lastName, username, password } = body;
 
   if (!username || !password) {
     res.status(400).json("Missing username or password");
@@ -43,8 +43,7 @@ app.post("/register", async (req, res) => {
 
   try {
     const passwordHash = await hash(password, saltRounds);
-    await knex("users").insert({ username, passwordHash });
-    console.log("hit")
+    await knex("users").insert({ firstName, lastName, username, passwordHash });
     res.status(201).json("USER CREATED");
   } catch(err) {
     if (err.code === '23505') {
@@ -65,8 +64,8 @@ app.post("/login", async (req, res) => {
   }
 
   try {
-    if (req.session.autheticated) {
-      res.status(200).json(req.session);
+    if (req.session.authenticated) {
+      res.status(202).json(req.session);
       return;
     } 
 
@@ -75,7 +74,7 @@ app.post("/login", async (req, res) => {
     const isMatch = await compare(password, hashedPass);
     if (isMatch) {
       req.session.authenticated = true;
-      req.session.userId = data[0].id;
+      req.session.user = data[0];
       res.status(202).json(req.session);
     }
     else res.status(401).json("Incorrect password");
@@ -86,7 +85,7 @@ app.post("/login", async (req, res) => {
 
 app.delete('/logout', (req, res) => {
   console.log(req.session)
-  if (req.session.userId) {
+  if (req.session.user) {
     req.session.destroy(err => {
       if (err) {
         res.status(400).json('Unable to log out')
@@ -101,7 +100,7 @@ app.delete('/logout', (req, res) => {
 
 const validSession = (req, res, next) => {
   console.log(req.session);
-  if (!req.session || !req.session.userId) {
+  if (!req.session || !req.session.user) {
       res.status(401).json("You shall not pass")
   } else {
     next();
@@ -110,6 +109,32 @@ const validSession = (req, res, next) => {
 
 app.get("/protected", validSession, (req, res) => {
   res.send("You are authenticated");
+})
+
+app.post("/items", async (req, res) => {
+  try {
+    let { body } = req;
+    await knex("items").insert(body);
+    res.status(201).json("ITEM CREATED");
+  } catch(err) {
+    console.log(err);
+    if (err.code === '22001') {
+      res.status(500).json("Description field exceeds 255 characters");
+    } else {
+      res.status(500).json("Bad request");
+    }
+  }
+})
+
+app.get("/items", async (req, res) => {
+  try {
+    const {user} = req.query;
+    const items = await knex("items").where('userId', user);
+    res.status(200).send(items);
+  } catch(err) {
+    console.log(err);
+    res.status(404).json("No items found");
+  }
 })
 
 module.exports = app;
