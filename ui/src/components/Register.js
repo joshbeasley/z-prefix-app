@@ -26,6 +26,7 @@ export const Register = () => {
 
     let res = await fetch(API_URL + '/register', {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

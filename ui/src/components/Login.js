@@ -32,6 +32,7 @@ export const Login = () => {
 
     let res = await fetch(API_URL + '/login', {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -97,7 +98,7 @@ export const Login = () => {
         </Row>
       </Form>
       <p className='mt-4'>New to Inventory? <Link to='/register'>Create an Account</Link></p>
-      <p><Link to='/inventory'>Login as a Guest</Link></p>
+      <p><Link to='/items'>Login as a Guest</Link></p>
     </Container>
     
   )

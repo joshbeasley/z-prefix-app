@@ -30,7 +30,12 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(cors());  
+app.use(
+  cors({
+    origin: ["http://localhost:8080", "http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 app.post("/register", async (req, res) => {
   let { body } = req;
@@ -64,15 +69,11 @@ app.post("/login", async (req, res) => {
   }
 
   try {
-    if (req.session.authenticated) {
-      res.status(202).json(req.session);
-      return;
-    } 
-
     const data = await knex("users").where({ username });
     const hashedPass = data[0].passwordHash
     const isMatch = await compare(password, hashedPass);
     if (isMatch) {
+      console.log(data[0]);
       req.session.authenticated = true;
       req.session.user = data[0];
       res.status(202).json(req.session);
@@ -98,6 +99,7 @@ app.delete('/logout', (req, res) => {
   }
 })
 
+// middleware to ensure that only authenticated users can perform the action
 const validSession = (req, res, next) => {
   console.log(req.session);
   if (!req.session || !req.session.user) {
@@ -111,7 +113,7 @@ app.get("/protected", validSession, (req, res) => {
   res.send("You are authenticated");
 })
 
-app.post("/items", async (req, res) => {
+app.post("/items", validSession, async (req, res) => {
   try {
     let { body } = req;
     await knex("items").insert(body);
@@ -126,14 +128,47 @@ app.post("/items", async (req, res) => {
   }
 })
 
+app.put("/items/:id", validSession, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let { body } = req;
+    await knex("items").where('id', id).update(body);
+    res.status(201).json("ITEM UPDATED");
+  } catch(err) {
+    console.log(err);
+    if (err.code === '22001') {
+      res.status(500).json("Description field exceeds 255 characters");
+    } else {
+      res.status(500).json("Bad request");
+    }
+  }
+})
+
 app.get("/items", async (req, res) => {
   try {
-    const {user} = req.query;
-    const items = await knex("items").where('userId', user);
-    res.status(200).send(items);
+    if (req.session && req.session.user) {
+      const userId = req.session.user.id;
+      const items = await knex("items").where('userId', userId);
+      res.status(200).send(items);
+    } else {
+      const items = await knex("items").join("users", "users.id", "=", "items.userId").select("items.id", "items.itemName", "items.description", "items.quantity", "users.lastName", "users.firstName");
+      res.status(200).send(items);
+    }
+    
   } catch(err) {
     console.log(err);
     res.status(404).json("No items found");
+  }
+})
+
+app.delete("/items/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await knex('items').where('id', id).del();
+    res.status(202).send(`Item with id ${id} successfully deleted.`)
+  } catch(err) {
+    console.log(err);
+    res.status(400).send('There was an error processing your request.');
   }
 })
 
