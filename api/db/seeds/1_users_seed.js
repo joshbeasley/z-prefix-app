@@ -11,7 +11,6 @@ const generateUsers = async () => {
     const password = 'password';
     const passwordHash = await hash(password, 12);
     users.push({
-      id: id,
       firstName: firstName,
       lastName: lastName,
       username: username,

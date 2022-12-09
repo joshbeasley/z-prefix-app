@@ -14,7 +14,6 @@ const generateItems = () => {
       'max': 20
     });
     items.push({
-      id: id,
       userId: userId,
       itemName: itemName,
       description: description,

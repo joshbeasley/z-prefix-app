@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
   return knex.schema.createTable('items', table => {
-    table.increments();
+    table.increments("id").primary();
     table.integer('userId').notNullable();
     table.foreign('userId').references('users.id').onDelete("CASCADE");
     table.string('itemName').notNullable();
