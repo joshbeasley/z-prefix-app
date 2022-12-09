@@ -129,7 +129,7 @@ export const Register = () => {
           <Button className="mt-5" type="submit">Register</Button>
         </Row>
       </Form>
-      <p className='mt-4'><Link to='/inventory'>Login as a Guest</Link></p>
+      <p className='mt-4'><Link to='/items'>Login as a Guest</Link></p>
       <p><Link to='/'>Login as an Authenicated User</Link></p>
     </Container>
   )
