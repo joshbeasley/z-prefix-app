@@ -56,7 +56,7 @@ export const ViewItem = ({ item, toggleRefresh }) => {
 
   const handleDelete = async () => {
     try {
-      let res = await fetch(`http://localhost:8080/items/${item.id}`, {
+      let res = await fetch(API_URL + `/items/${item.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export const ViewItem = ({ item, toggleRefresh }) => {
       if (res.status !== 202) {
         throw new Error();
       }
-      
+
       setDisabled(true);
       toggleRefresh();
       handleClose();
