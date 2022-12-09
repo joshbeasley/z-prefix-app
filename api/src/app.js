@@ -30,9 +30,9 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
-app.use(
+app.use("*",
   cors({
-    origin: ["http://localhost:8080", "http://localhost:3000"],
+    origin: [process.env.API_URL, process.env.UI_URL],
     credentials: true,
   })
 );
