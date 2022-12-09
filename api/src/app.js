@@ -20,7 +20,7 @@ app.use(session({
   resave: false,
   name: 'sessionId',
   cookie: {
-    secure: env === 'development' ? false : true, // if true: only transmit cookie over https, in prod, always activate this
+    secure: false,
     httpOnly: true, 
     maxAge: 1000 * 60 * 30, 
     sameSite: 'lax',
