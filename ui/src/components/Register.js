@@ -121,7 +121,7 @@ export const Register = () => {
               autoComplete="new-password"
             />
             <Form.Control.Feedback type="invalid">
-                Please choose a password. Passwords must have at least 3 characters.
+                Please choose a password. Passwords must have at least 3 characters!
             </Form.Control.Feedback>
           </Form.Group>
         </Row>

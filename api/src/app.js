@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use("*",
   cors({
-    origin: [process.env.API_URL, process.env.UI_URL],
+    origin: [process.env.UI_URL || 'http://localhost:3000', process.env.API_URL || 'http://localhost:8080'],
     credentials: true,
   })
 );
