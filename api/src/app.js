@@ -13,6 +13,7 @@ const knex = require('knex')(config)
 const saltRounds = 12; 
 const { hash, compare } = bcrypt;
 
+app.set('trust proxy', 1);
 app.use(session({
   store,
   secret: process.env.SESSION_SECRET || 'mySecret',
@@ -20,10 +21,10 @@ app.use(session({
   resave: false,
   name: 'sessionId',
   cookie: {
-    secure: false,
+    secure: true,
     httpOnly: true, 
     maxAge: 1000 * 60 * 30, 
-    sameSite: 'none',
+    sameSite: 'lax',
   }
 }));
 
