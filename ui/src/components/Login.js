@@ -3,6 +3,7 @@ import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../context';
 import config from '../config'
+import { ArchiveFill } from 'react-bootstrap-icons';
 
 const API_URL = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
@@ -55,8 +56,10 @@ export const Login = () => {
 
   return (
     <Container className='login'>
-      <h1 className='mt-4'>Login</h1>
-      <Form noValidate validated={validated} onSubmit={handleSubmit} className="mt-4">
+      <h3 className='mt-4'>Welcome to</h3>
+      <h1><ArchiveFill className="login-logo"/>TIMS</h1>
+      <h5>The Inventory Management System</h5>
+      <Form noValidate validated={validated} onSubmit={handleSubmit} className="mt-5">
         <Row className="justify-content-center">
           <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom01">
             <Form.Label>Username</Form.Label>
@@ -97,7 +100,7 @@ export const Login = () => {
           <Button className="mt-5" type="submit">Login</Button>
         </Row>
       </Form>
-      <p className='mt-4'>New to Inventory? <Link to='/register'>Create an Account</Link></p>
+      <p className='mt-4'>New to TIMS? <Link to='/register'>Create an Account</Link></p>
       <p><Link to='/items'>Login as a Guest</Link></p>
     </Container>
     

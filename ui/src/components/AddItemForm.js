@@ -61,7 +61,7 @@ export const AddItemForm = ({ toggleRefresh }) => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary ms-2" onClick={handleShow}>
         Add an Item
       </Button>
 
@@ -99,12 +99,13 @@ export const AddItemForm = ({ toggleRefresh }) => {
                   name="description"
                   onChange={handleChange}
                   autoComplete="on"
+                  maxLength={"1000"}
                 />
                 <Form.Control.Feedback type="invalid">
                   Please enter an item description. 
                 </Form.Control.Feedback>
                 <Form.Text id="passwordHelpBlock" muted>
-                  Limit of 255 characters
+                  Limit of 1000 characters
               </Form.Text>
               </Form.Group>
             </Row>

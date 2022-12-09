@@ -1,5 +1,18 @@
+.login h3 {
+  text-align: center;
+}
+
 .login h1 {
   text-align: center;
+}
+
+.login h5 {
+  text-align: center;
+}
+
+.login-logo {
+  margin-right: 10px;
+  margin-bottom: 3px;
 }
 
 .login p {
@@ -8,7 +21,7 @@
 
 .empty-inventory {
   text-align: center;
-  margin-top: 200px;
+  margin-top: 150px;
 }
 
 .empty-inventory button {
@@ -34,3 +47,11 @@
   flex-direction: row;
   flex-wrap: nowrap;
 }
+
+.table {
+  width: 77%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+

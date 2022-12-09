@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import config from '../config'
+import { ArchiveFill } from 'react-bootstrap-icons';
 
 const API_URL = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
@@ -40,7 +41,7 @@ export const Register = () => {
       return;
     }
 
-    navigate('/login');
+    navigate('/');
   };
 
   const handleChange = (event) => {
@@ -50,7 +51,9 @@ export const Register = () => {
 
   return (
     <Container className='login'>
-      <h1 className='mt-4'>Register</h1>
+      <h3 className='mt-4'>Create an Account for</h3>
+      <h1><ArchiveFill className="login-logo"/>TIMS</h1>
+      <h5>The Inventory Management System</h5>
       <Form noValidate validated={validated} onSubmit={handleSubmit} className="mt-4">
       <Row className="justify-content-center">
           <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom01">
@@ -70,7 +73,7 @@ export const Register = () => {
           </Form.Group>
         </Row>
         <Row className="justify-content-center mt-4">
-          <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom01">
+          <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom02">
             <Form.Label>Last Name</Form.Label>
             <Form.Control
               required
@@ -87,7 +90,7 @@ export const Register = () => {
           </Form.Group>
         </Row>
         <Row className="justify-content-center mt-4">
-          <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom01">
+          <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom03">
             <Form.Label>Username</Form.Label>
             <Form.Control
               required
@@ -105,7 +108,7 @@ export const Register = () => {
           </Form.Group>
         </Row>
         <Row className="justify-content-center mt-4">
-          <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom02">
+          <Form.Group as={Col} sm="12" md="8" lg="6" xl="4" controlId="validationCustom04">
             <Form.Label>Password</Form.Label>
             <Form.Control
               required
@@ -127,6 +130,7 @@ export const Register = () => {
         </Row>
       </Form>
       <p className='mt-4'><Link to='/inventory'>Login as a Guest</Link></p>
+      <p><Link to='/'>Login as an Authenicated User</Link></p>
     </Container>
   )
 }

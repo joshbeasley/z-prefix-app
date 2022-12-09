@@ -38,6 +38,8 @@ app.use(
 );
 
 app.post("/register", async (req, res) => {
+  const maxIdQuery = await knex('users').max('id as maxId').first();
+  let id = maxIdQuery.maxId + 1;
   let { body } = req;
   let { firstName, lastName, username, password } = body;
 
@@ -48,10 +50,11 @@ app.post("/register", async (req, res) => {
 
   try {
     const passwordHash = await hash(password, saltRounds);
-    await knex("users").insert({ firstName, lastName, username, passwordHash });
+    await knex("users").insert({ id, firstName, lastName, username, passwordHash });
     res.status(201).json("USER CREATED");
   } catch(err) {
     if (err.code === '23505') {
+      console.log(err)
       res.status(403).json("User already exists");
     } else {
       res.status(500).json(err);
@@ -109,14 +112,22 @@ const validSession = (req, res, next) => {
   }
 }
 
-app.get("/protected", validSession, (req, res) => {
-  res.send("You are authenticated");
+app.get("/items", async (req, res) => {
+  try {
+    const items = await knex("items").join("users", "users.id", "=", "items.userId").select("items.id", "items.itemName", "items.description", "items.quantity", "items.userId", "users.lastName", "users.firstName");
+    res.status(200).send(items);
+  } catch(err) {
+    console.log(err);
+    res.status(404).json("No items found");
+  }
 })
 
 app.post("/items", validSession, async (req, res) => {
+  const maxIdQuery = await knex('items').max('id as maxId').first();
+  let id = maxIdQuery.maxId + 1;
   try {
     let { body } = req;
-    await knex("items").insert(body);
+    await knex("items").insert({...body, id});
     res.status(201).json("ITEM CREATED");
   } catch(err) {
     console.log(err);
@@ -141,23 +152,6 @@ app.put("/items/:id", validSession, async (req, res) => {
     } else {
       res.status(500).json("Bad request");
     }
-  }
-})
-
-app.get("/items", async (req, res) => {
-  try {
-    if (req.session && req.session.user) {
-      const userId = req.session.user.id;
-      const items = await knex("items").where('userId', userId);
-      res.status(200).send(items);
-    } else {
-      const items = await knex("items").join("users", "users.id", "=", "items.userId").select("items.id", "items.itemName", "items.description", "items.quantity", "users.lastName", "users.firstName");
-      res.status(200).send(items);
-    }
-    
-  } catch(err) {
-    console.log(err);
-    res.status(404).json("No items found");
   }
 })
 

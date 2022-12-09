@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.integer('userId').notNullable();
     table.foreign('userId').references('users.id').onDelete("CASCADE");
     table.string('itemName').notNullable();
-    table.string('description');
+    table.string('description', 1000);
     table.integer('quantity').notNullable();
     table.timestamps(true, true);
   });

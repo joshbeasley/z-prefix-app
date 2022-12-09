@@ -13,6 +13,7 @@ export const ViewItem = ({ item, toggleRefresh }) => {
   const [disabled, setDisabled] = useState(true);
 
   const handleClose = () => {
+    setDisabled(true);
     setShow(false);
   }
   const handleShow = () => setShow(true);
@@ -48,6 +49,7 @@ export const ViewItem = ({ item, toggleRefresh }) => {
       alert(resJson);
       return;
     }
+    setDisabled(true);
     toggleRefresh();
     handleClose();
   };
@@ -63,7 +65,8 @@ export const ViewItem = ({ item, toggleRefresh }) => {
       if (res.status !== 202) {
         throw new Error();
       }
-
+      
+      setDisabled(true);
       toggleRefresh();
       handleClose();
     } catch (error) {
@@ -77,7 +80,7 @@ export const ViewItem = ({ item, toggleRefresh }) => {
   }
 
   const renderButtons = () => {
-    if (!user) {
+    if (!user || item.userId != user.id) {
       return (
         <Row className='add-item'>
           <Button variant="secondary" onClick={handleClose}>
@@ -160,12 +163,13 @@ export const ViewItem = ({ item, toggleRefresh }) => {
                   onChange={handleChange}
                   autoComplete="on"
                   disabled={disabled}
+                  maxLength={"1000"}
                 />
                 <Form.Control.Feedback type="invalid">
                   Please enter an item description. 
                 </Form.Control.Feedback>
                 <Form.Text id="passwordHelpBlock" muted>
-                  Limit of 255 characters
+                  Limit of 1000 characters
               </Form.Text>
               </Form.Group>
             </Row>
